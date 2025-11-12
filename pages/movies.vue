@@ -98,7 +98,6 @@
       </li>
     </ul>
 
-    <!-- Liste des films - Mode Grille -->
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       <div
           v-for="film in films"
@@ -106,7 +105,7 @@
           @click="goToFilm(film.id)"
           class="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300"
       >
-        <!-- Image -->
+
         <div class="relative">
           <img
               :src="`https://picsum.photos/seed/${film.id}/300/450`"
@@ -116,7 +115,7 @@
           />
         </div>
 
-        <!-- Info -->
+
         <div class="p-4">
           <h3 class="font-bold text-gray-900 mb-2 line-clamp-1">{{ film.name }}</h3>
           <p class="text-sm text-gray-600 mb-2 line-clamp-2">
@@ -130,7 +129,7 @@
       </div>
     </div>
 
-    <!-- Aucun résultat -->
+
     <div v-if="!loading && films.length === 0" class="text-center py-12">
       <p class="text-xl text-gray-600 mb-2">Aucun film trouvé</p>
       <p class="text-gray-500">
@@ -161,7 +160,7 @@ const numberResultat = computed(() => films.value.length)
 
 // Navigation vers la page de détail
 const goToFilm = (filmId) => {
-  router.push(`/movies/${filmId}`)
+  router.push(`/movie/${filmId}`)
 }
 
 // Récupérer tous les films au chargement
