@@ -4,7 +4,7 @@
       <!-- Bouton retour -->
       <button
           @click="goBack"
-          class="mb-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          class="mb-6 px-4 py-2 "
       >
         ← Retour à la recherche
       </button>
@@ -15,13 +15,13 @@
       </div>
 
       <!-- Erreur -->
-      <div v-else-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+      <div v-else-if="error" class="">
         <p class="font-bold">Erreur</p>
         <p>{{ error }}</p>
       </div>
 
       <!-- Détails du film -->
-      <div v-else-if="film" class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div v-else-if="film" class="">
         <div class="md:flex">
           <!-- Image du film -->
           <div class="md:flex-shrink-0 md:w-1/3">
@@ -59,12 +59,6 @@
                   </p>
                 </div>
 
-                <div class="bg-gray-50 p-4 rounded">
-                  <p class="text-sm text-gray-500">Note</p>
-                  <p class="text-lg font-semibold text-gray-900">
-                    ⭐ {{ film.nbStarlet }} / 5
-                  </p>
-                </div>
 
                 <div class="bg-gray-50 p-4 rounded">
                   <p class="text-sm text-gray-500">ID</p>
@@ -72,16 +66,7 @@
                 </div>
               </div>
 
-              <!-- Site officiel -->
-              <div v-if="film.url" class="mt-6">
-                <a
-                    :href="film.url"
-                    target="_blank"
-                    class="inline-block px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700 transition"
-                >
-                  🔗 Visiter le site officiel
-                </a>
-              </div>
+
             </div>
           </div>
         </div>

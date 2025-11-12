@@ -21,7 +21,7 @@
             type="button"
             class="mt-7 px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
         >
-          ✕ Effacer
+           Effacer
         </button>
       </form>
     </div>
@@ -82,7 +82,7 @@
             </div>
 
             <div v-if="film.directors" class="flex items-center gap-2">
-              <span class="text-gray-500">🎬 Réalisateur:</span>
+              <span class="text-gray-500"> Réalisateur:</span>
               <span class="font-medium text-gray-900 truncate">{{ film.directors }}</span>
             </div>
           </div>
@@ -92,7 +92,7 @@
         <!-- Bouton voir plus -->
         <div class="flex items-center">
           <button class="px-4 py-2  transition">
-            Voir →
+            Voir
           </button>
         </div>
       </li>
