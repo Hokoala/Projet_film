@@ -71,7 +71,7 @@ const loginUser = async () => {
 
     if (result.success) {
       // Rediriger vers la page des films
-      await navigateTo('/movies')
+      await navigateTo('/')
     } else {
       error.value = result.error
     }

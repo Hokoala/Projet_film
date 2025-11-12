@@ -28,7 +28,7 @@ export default {
 
   async updateFilm(id, filmData) {
     return api(`/movies/${id}`, {
-      method: 'PUT',
+      method: 'GET',
       body: JSON.stringify(filmData)
     })
   },
@@ -38,5 +38,7 @@ export default {
       method: 'DELETE',
     })
   }
+
+
 }
 

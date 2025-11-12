@@ -9,25 +9,6 @@
         Ceci est la page d'accueil de votre application avec Nuxt UI.
       </p>
 
-      <div class="flex gap-4">
-        <NuxtLink to="/register">
-          <UButton color="primary" size="lg">
-            S'inscrire
-          </UButton>
-        </NuxtLink>
-
-        <NuxtLink to="/login">
-          <UButton color="gray" size="lg" variant="soft">
-            Se connecter
-          </UButton>
-        </NuxtLink>
-
-        <NuxtLink to="/movies">
-          <UButton color="gray" size="lg" variant="ghost">
-            Découvrir les films
-          </UButton>
-        </NuxtLink>
-      </div>
     </UCard>
   </div>
 </template>

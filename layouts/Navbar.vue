@@ -12,20 +12,21 @@ const handleLogout = async () => {
 <template>
   <nav class="bg-white shadow-md border-b">
     <div class="container mx-auto px-4">
-      <div class="flex items-center justify-between h-16">
-        <!-- Logo et titre -->
-        <NuxtLink to="/" class="flex items-center gap-2">
-          <span class="text-2xl">🎬</span>
-          <span class="text-xl font-bold text-gray-800">CinéFilms</span>
-        </NuxtLink>
 
+
+
+
+      <div class="flex items-center justify-between h-16">
         <!-- Menu principal -->
-        <div class="flex items-center gap-6">
-          <NuxtLink to="/films" class="text-gray-600 hover:text-gray-900 font-medium">
-            Films
+        <div class="flex items-center gap-2">
+          <NuxtLink to="/" class="text-gray-600 hover:text-gray-900 font-medium">
+            Home
+          </NuxtLink>
+          <NuxtLink to="/movies" class="text-gray-600 hover:text-gray-900 font-medium">
+            Movies
           </NuxtLink>
 
-          <NuxtLink v-if="isAuthenticated && currentUser?.role === 'admin'" to="/admin" class="text-gray-600 hover:text-gray-900 font-medium">
+          <NuxtLink v-if="isAuthenticated && currentUser?.role === 'admin'" to="/profile" class="text-gray-600 hover:text-gray-900 font-medium">
             Administration
           </NuxtLink>
         </div>
