@@ -84,7 +84,7 @@
         <div class="flex flex-col md:flex-row justify-between items-center">
           <!-- Copyright -->
           <p class="text-sm text-gray-500">
-            &copy; {{ currentYear }} CinéApp. Tous droits réservés.
+            &copy; {{ currentYear }} Utopia. Tous droits réservés.
           </p>
 
           </div>
@@ -95,7 +95,7 @@
     <div class="bg-gray-950 py-4">
       <div class="container mx-auto px-6">
         <p class="text-center text-xs text-gray-600">
-          mmi23e10 - Application de gestion de films réalisée par des étudiants en MMI.
+          mmi23e10 - Application de gestion de films réalisée par un etudiant en MMI.
         </p>
       </div>
     </div>

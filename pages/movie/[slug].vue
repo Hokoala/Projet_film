@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 p-6">
+  <div class="min-h-screen  ">
     <div class="container mx-auto max-w-4xl">
       <!-- Bouton retour -->
       <button
@@ -39,7 +39,7 @@
             <div class="space-y-4">
               <!-- Description -->
               <div>
-                <h2 class="text-lg font-semibold text-gray-700 mb-2">📖 Synopsis</h2>
+                <h2 class="text-lg font-semibold text-gray-700 mb-2">Synopsis</h2>
                 <p class="text-gray-600 leading-relaxed">{{ film.description }}</p>
               </div>
 
@@ -59,11 +59,6 @@
                   </p>
                 </div>
 
-
-                <div class="bg-gray-50 p-4 rounded">
-                  <p class="text-sm text-gray-500">ID</p>
-                  <p class="text-lg font-semibold text-gray-900">#{{ film.id }}</p>
-                </div>
               </div>
 
 
