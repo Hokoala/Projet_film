@@ -1,3 +1,9 @@
+
+Etudiant en MMI - Jean Michel LE  - TP B 
+PROJET Final - Site de Films
+
+
+
 # Nuxt Minimal Starter
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.

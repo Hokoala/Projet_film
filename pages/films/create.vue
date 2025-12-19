@@ -35,18 +35,6 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
           <span>{{ errorMessage }}</span>
-          <button @click="errorMessage = ''" class="ml-auto text-red-400 hover:text-red-300">×</button>
-        </div>
-      </div>
-
-      <!-- Message de succès -->
-      <div v-if="successMessage" class="mb-6 p-4 bg-green-600/20 border border-green-600/50 rounded-xl text-green-400">
-        <div class="flex items-center gap-3">
-          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-          </svg>
-          <span>{{ successMessage }}</span>
-          <button @click="successMessage = ''" class="ml-auto text-green-400 hover:text-green-300">×</button>
         </div>
       </div>
 
@@ -120,10 +108,10 @@
                   <option value="" disabled>Sélectionner un réalisateur</option>
                   <option
                       v-for="director in directors"
-                      :key="director.id || director['@id']"
-                      :value="director.id || director['@id']"
+                      :key="director.id"
+                      :value="director.id"
                   >
-                    {{ director.firstname || director.name }} {{ director.lastname || '' }}
+                    {{ director.firstName || director.firstname }} {{ director.lastName || director.lastname }}
                   </option>
                 </select>
               </div>
@@ -261,18 +249,7 @@
                     accept="image/*"
                     @change="handlePosterUpload"
                     hidden
-                    :disabled="isUploading"
                 />
-
-                <!-- Info upload réussi -->
-                <div v-if="form.imageId" class="p-3 bg-green-600/10 border border-green-600/30 rounded-lg">
-                  <div class="flex items-center gap-2 text-green-400 text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                    </svg>
-                    <span>Image uploadée</span>
-                  </div>
-                </div>
               </div>
 
               <!-- Aperçu -->
@@ -282,18 +259,16 @@
                       :src="posterPreview || form.imageUrl"
                       alt="Aperçu du poster"
                       class="w-48 h-72 object-cover rounded-xl shadow-2xl border-2 border-gray-700 group-hover:border-red-600 transition-all"
-                      @error="handleImageError"
                   />
                   <button
+                      v-if="posterPreview"
                       type="button"
                       @click="removePoster"
                       class="absolute -top-3 -right-3 w-8 h-8 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all transform hover:scale-110"
-                      :disabled="isRemoving"
                   >
-                    <svg v-if="!isRemoving" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
-                    <span v-else class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                   </button>
                 </div>
                 <div v-else class="w-48 h-72 bg-gray-800 rounded-xl border-2 border-dashed border-gray-700 flex items-center justify-center">
@@ -374,10 +349,9 @@
 import { ref, onMounted } from 'vue'
 import { useSession } from '~/stores/session'
 import { useRouter, useRoute } from 'vue-router'
+import mediaService from '~/services/mediaService'
 import filmService from '~/services/filmService'
 import directorService from '~/services/directorService'
-
-const API_URL = 'http://localhost:8319'
 
 const session = useSession()
 const router = useRouter()
@@ -385,10 +359,8 @@ const route = useRoute()
 
 const isUploading = ref(false)
 const isSubmitting = ref(false)
-const isRemoving = ref(false)
 const posterPreview = ref('')
 const errorMessage = ref('')
-const successMessage = ref('')
 const directors = ref([])
 
 // Charger les réalisateurs au montage
@@ -412,10 +384,10 @@ onMounted(async () => {
   // Charger la liste des réalisateurs
   try {
     const response = await directorService.getAllDirectors()
+    // L'API peut retourner { 'hydra:member': [...] } ou directement un tableau
     directors.value = response['hydra:member'] || response.member || response || []
-    // console.log('✅ Réalisateurs chargés:', directors.value.length)
   } catch (error) {
-    // console.error('❌ Erreur chargement réalisateurs:', error)
+    // console.error('Erreur chargement réalisateurs:', error)
     errorMessage.value = 'Impossible de charger la liste des réalisateurs'
   }
 })
@@ -425,49 +397,29 @@ const filmId = ref(null)
 
 // Formulaire avec les champs correspondant à l'API
 const form = ref({
-  name: '',
-  description: '',
-  duration: null,
-  releaseDate: '',
-  directorId: '',
-  nbEntries: 0,
-  url: '',
-  budget: null,
-  imageId: null,
-  imageUrl: ''
+  name: '',              // Titre du film
+  description: '',       // Description/synopsis
+  duration: null,        // Durée en minutes
+  releaseDate: '',       // Date de sortie (format YYYY-MM-DD)
+  directorId: '',        // ID du réalisateur
+  nbEntries: 0,          // Nombre d'entrées
+  url: '',               // URL du site officiel
+  budget: null,          // Budget
+  imageId: null,         // ID de l'image (media_object)
+  imageUrl: ''           // URL de l'image pour l'aperçu
 })
 
-// Gérer les erreurs de chargement d'image
-const handleImageError = () => {
-  // console.warn('⚠️ Erreur chargement image')
-  posterPreview.value = ''
-}
-
-/**
- * Upload du poster vers /api/media_objects
- */
+// Gestion de l'upload du poster
 const handlePosterUpload = async (event) => {
   const file = event.target.files?.[0]
   if (!file) return
 
-  errorMessage.value = ''
-  successMessage.value = ''
-
   // Validation
   if (!file.type.startsWith('image/')) {
-    errorMessage.value = 'Veuillez sélectionner une image (JPG, PNG, GIF...)'
-    return
+    return alert('Veuillez sélectionner une image')
   }
-
   if (file.size > 5 * 1024 * 1024) {
-    errorMessage.value = 'L\'image ne doit pas dépasser 5MB'
-    return
-  }
-
-  const token = session.token || localStorage.getItem('token')
-  if (!token) {
-    errorMessage.value = 'Vous devez être connecté pour uploader une image'
-    return
+    return alert('L\'image ne doit pas dépasser 5MB')
   }
 
   // Aperçu immédiat
@@ -476,119 +428,44 @@ const handlePosterUpload = async (event) => {
   reader.readAsDataURL(file)
 
   isUploading.value = true
+  errorMessage.value = ''
 
   try {
-    // console.log('📤 Upload du fichier vers media_objects...')
+    const mediaResult = await mediaService.uploadImage(file)
 
-    const formData = new FormData()
-    formData.append('file', file)
-
-    const uploadResponse = await fetch(`${API_URL}/api/media_objects`, {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/ld+json'
-        // ⚠️ PAS de Content-Type pour FormData !
-      }
-    })
-
-    if (!uploadResponse.ok) {
-      const errorData = await uploadResponse.json().catch(() => ({}))
-      // console.error('❌ Erreur upload:', errorData)
-
-      if (uploadResponse.status === 401) {
-        throw new Error('Session expirée, veuillez vous reconnecter')
-      }
-      if (uploadResponse.status === 415) {
-        throw new Error('Format de fichier non supporté')
-      }
-      throw new Error(errorData.detail || `Erreur upload: ${uploadResponse.status}`)
+    if (mediaResult.id) {
+      form.value.imageId = mediaResult.id
+      form.value.imageUrl = mediaResult.url
+      posterPreview.value = mediaResult.url
     }
-
-    const mediaData = await uploadResponse.json()
-    // console.log('✅ Media uploadé:', mediaData)
-
-    // Récupérer l'IRI et l'URL
-    const mediaIri = mediaData['@id'] || `/api/media_objects/${mediaData.id}`
-    let imageUrl = mediaData.contentUrl || mediaData.filePath || mediaData.url
-
-    if (imageUrl && imageUrl.startsWith('/')) {
-      imageUrl = API_URL + imageUrl
-    }
-
-    // console.log('📎 Media IRI:', mediaIri)
-    // console.log('🖼️ Image URL:', imageUrl)
-
-    form.value.imageId = mediaIri
-    form.value.imageUrl = imageUrl
-    posterPreview.value = imageUrl
-
-    successMessage.value = 'Image uploadée avec succès !'
-
   } catch (error) {
-    // console.error('❌ Erreur:', error)
-    errorMessage.value = error.message || 'Erreur lors de l\'upload'
+    // console.error('Erreur upload:', error)
+    errorMessage.value = `Erreur upload: ${error.message}`
     posterPreview.value = ''
-    form.value.imageId = null
-    form.value.imageUrl = ''
   } finally {
     isUploading.value = false
-    event.target.value = ''
   }
 }
 
-/**
- * Supprimer le poster uploadé
- */
 const removePoster = async () => {
-  if (!form.value.imageId) {
-    posterPreview.value = ''
-    return
-  }
-
-  const token = session.token || localStorage.getItem('token')
-  if (!token) return
-
-  isRemoving.value = true
-
-  try {
-    const mediaId = form.value.imageId.toString().includes('/')
-        ? form.value.imageId.split('/').pop()
-        : form.value.imageId
-
-    // console.log('🗑️ Suppression du media_object:', mediaId)
-
-    const deleteResponse = await fetch(`${API_URL}/api/media_objects/${mediaId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/ld+json'
-      }
-    })
-
-    if (deleteResponse.ok || deleteResponse.status === 204) {
-      // console.log('✅ Media_object supprimé')
+  if (form.value.imageId) {
+    try {
+      await mediaService.deleteImage(form.value.imageId)
+    } catch (e) {
+      // console.warn('Impossible de supprimer le media_object:', e)
     }
-  } catch (e) {
-    // console.warn('⚠️ Erreur suppression:', e)
-  } finally {
-    form.value.imageId = null
-    form.value.imageUrl = ''
-    posterPreview.value = ''
-    isRemoving.value = false
   }
+  form.value.imageId = null
+  form.value.imageUrl = ''
+  posterPreview.value = ''
 }
 
-/**
- * Soumettre le formulaire
- */
 const handleSubmit = async () => {
   errorMessage.value = ''
-  successMessage.value = ''
   isSubmitting.value = true
 
   try {
+    // Construire les données pour l'API Platform (format camelCase)
     const filmData = {
       name: form.value.name,
       description: form.value.description,
@@ -599,31 +476,35 @@ const handleSubmit = async () => {
       budget: form.value.budget ? parseFloat(form.value.budget) : 0
     }
 
-    // Ajouter le réalisateur (IRI format)
+    // Ajouter le réalisateur (IRI format pour API Platform)
     if (form.value.directorId) {
-      const directorId = form.value.directorId.toString()
-      filmData.director = directorId.startsWith('/api/')
-          ? directorId
-          : `/api/directors/${directorId}`
+      const directorIdStr = String(form.value.directorId)
+      filmData.director = directorIdStr.startsWith('/api/')
+          ? directorIdStr
+          : `/api/directors/${form.value.directorId}`
     }
 
-    // Ajouter l'image si uploadée (IRI format)
+    // Ajouter l'image si uploadée (IRI format pour API Platform)
     if (form.value.imageId) {
-      filmData.image = form.value.imageId
+      const imageIdClean = form.value.imageId.toString().includes('/')
+          ? form.value.imageId
+          : `/api/media_objects/${form.value.imageId}`
+      filmData.image = imageIdClean
     }
 
-    // console.log('📤 Données envoyées:', filmData)
+    // console.log('📤 Données envoyées à l\'API:', filmData)
 
     if (isEditing.value) {
-      await filmService.updateFilm(filmId.value, filmData)
-      successMessage.value = 'Film mis à jour avec succès !'
+      const result = await filmService.updateFilm(filmId.value, filmData)
+      // console.log('✅ Film mis à jour:', result)
+      alert('Film mis à jour avec succès !')
     } else {
-      await filmService.createFilm(filmData)
-      successMessage.value = 'Film créé avec succès !'
+      const result = await filmService.createFilm(filmData)
+      // console.log('✅ Film créé:', result)
+      alert('Film créé avec succès !')
     }
 
-    setTimeout(() => router.push('/movies'), 1500)
-
+    router.push('/movies')
   } catch (error) {
     // console.error('❌ Erreur:', error)
     errorMessage.value = `Erreur: ${error.message}`
@@ -634,6 +515,7 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
+/* Form Groups */
 .form-group {
   @apply space-y-2;
 }
@@ -648,6 +530,7 @@ const handleSubmit = async () => {
   @apply hover:border-gray-600;
 }
 
+/* Select styling */
 select.form-input {
   @apply appearance-none cursor-pointer;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
@@ -661,6 +544,7 @@ select.form-input option {
   @apply bg-gray-800 text-white;
 }
 
+/* Buttons */
 .btn-primary {
   @apply inline-flex items-center justify-center gap-2 px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all duration-300;
   @apply shadow-lg hover:shadow-red-600/30 transform hover:-translate-y-0.5;
@@ -672,6 +556,7 @@ select.form-input option {
   @apply border border-gray-600 hover:border-gray-500;
 }
 
+/* Upload Zone */
 .upload-zone {
   @apply block w-full p-8 border-2 border-dashed border-gray-700 rounded-xl cursor-pointer transition-all duration-300;
   @apply hover:border-red-600 hover:bg-red-600/5;
@@ -681,6 +566,7 @@ select.form-input option {
   @apply border-red-600 bg-red-600/5 cursor-wait;
 }
 
+/* Spinners */
 .spinner-large {
   @apply w-12 h-12 border-4 border-gray-700 border-t-red-600 rounded-full animate-spin;
 }

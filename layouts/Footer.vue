@@ -1,13 +1,16 @@
 <template>
-  <footer class="bg-gray-900 text-gray-300">
+  <footer class="bg-gradient-to-b from-gray-900 via-black to-red-950 text-gray-300 border-t border-red-900/30">
     <!-- Section principale -->
     <div class="container mx-auto px-6 py-12">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
 
         <!-- Colonne 1 : À propos -->
         <div>
+          <h3 class="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-700">
+            🎬 UTOPIA
+          </h3>
           <p class="text-sm text-gray-400 leading-relaxed">
-            Votre plateforme de découverte de films.
+            Votre plateforme cinéma de découverte de films.
             Explorez, recherchez et partagez vos films préférés.
           </p>
         </div>
@@ -17,17 +20,17 @@
           <h3 class="text-white text-lg font-bold mb-4">Navigation</h3>
           <ul class="space-y-2">
             <li>
-              <NuxtLink to="/" class="text-sm hover:text-white transition">
+              <NuxtLink to="/" class="text-sm hover:text-red-400 transition">
                 Accueil
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink to="/movies" class="text-sm hover:text-white transition">
+              <NuxtLink to="/movies" class="text-sm hover:text-red-400 transition">
                 Films
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink to="/profile" class="text-sm hover:text-white transition">
+              <NuxtLink to="/profile" class="text-sm hover:text-red-400 transition">
                 Mon Profil
               </NuxtLink>
             </li>
@@ -39,19 +42,19 @@
           <h3 class="text-white text-lg font-bold mb-4">Catégories</h3>
           <ul class="space-y-2">
             <li>
-              <a href="#" class="text-sm hover:text-white transition">Action</a>
+              <a href="#" class="text-sm hover:text-red-400 transition">Action</a>
             </li>
             <li>
-              <a href="#" class="text-sm hover:text-white transition">Comédie</a>
+              <a href="#" class="text-sm hover:text-red-400 transition">Comédie</a>
             </li>
             <li>
-              <a href="#" class="text-sm hover:text-white transition">Drame</a>
+              <a href="#" class="text-sm hover:text-red-400 transition">Drame</a>
             </li>
             <li>
-              <a href="#" class="text-sm hover:text-white transition">Science-Fiction</a>
+              <a href="#" class="text-sm hover:text-red-400 transition">Science-Fiction</a>
             </li>
             <li>
-              <a href="#" class="text-sm hover:text-white transition">Horreur</a>
+              <a href="#" class="text-sm hover:text-red-400 transition">Horreur</a>
             </li>
           </ul>
         </div>
@@ -61,41 +64,40 @@
           <h3 class="text-white text-lg font-bold mb-4">Informations</h3>
           <ul class="space-y-2">
             <li>
-              <a href="#" class="text-sm hover:text-white transition">À propos</a>
+              <a href="#" class="text-sm hover:text-red-400 transition">À propos</a>
             </li>
             <li>
-              <a href="#" class="text-sm hover:text-white transition">Contact</a>
+              <a href="#" class="text-sm hover:text-red-400 transition">Contact</a>
             </li>
             <li>
-              <a href="#" class="text-sm hover:text-white transition">FAQ</a>
+              <a href="#" class="text-sm hover:text-red-400 transition">FAQ</a>
             </li>
             <li>
-              <a href="#" class="text-sm hover:text-white transition">Politique de confidentialité</a>
+              <a href="#" class="text-sm hover:text-red-400 transition">Politique de confidentialité</a>
             </li>
             <li>
-              <a href="#" class="text-sm hover:text-white transition">Conditions d'utilisation</a>
+              <a href="#" class="text-sm hover:text-red-400 transition">Conditions d'utilisation</a>
             </li>
           </ul>
         </div>
       </div>
 
       <!-- Séparateur -->
-      <div class="border-t border-gray-800 mt-8 pt-8">
+      <div class="border-t border-red-900/30 mt-8 pt-8">
         <div class="flex flex-col md:flex-row justify-between items-center">
           <!-- Copyright -->
           <p class="text-sm text-gray-500">
-            &copy; {{ currentYear }} Utopia. Tous droits réservés.
+            &copy; {{ currentYear }} Utopia Cinema. Tous droits réservés.
           </p>
-
-          </div>
         </div>
       </div>
+    </div>
 
-    <!-- Barre extra (optionnelle) -->
-    <div class="bg-gray-950 py-4">
+    <!-- Barre extra -->
+    <div class="bg-black/50 py-4 border-t border-red-900/20">
       <div class="container mx-auto px-6">
         <p class="text-center text-xs text-gray-600">
-          mmi23e10 - Application de gestion de films réalisée par un etudiant en MMI.
+           Application de gestion de films - Projet mmi23e10- Utopia Cinema
         </p>
       </div>
     </div>
@@ -103,13 +105,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-
-const selectedLanguage = ref('fr')
-
-const currentYear = computed(() => {
-  return new Date().getFullYear()
-})
+const currentYear = new Date().getFullYear()
 </script>
 
 <style scoped>
