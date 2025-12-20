@@ -2,6 +2,7 @@
 Etudiant en MMI - Jean Michel LE  - TP B 
 PROJET Final - Site de Films
 
+Video : https://youtu.be/mPzMt46xVkY?si=YEQj4qMzVrSmBf_S
 
 
 # Nuxt Minimal Starter
